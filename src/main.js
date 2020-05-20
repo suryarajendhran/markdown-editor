@@ -1,4 +1,5 @@
-const { app, BrowserWindow } = require("electron");
+const fs = require("fs");
+const { app, BrowserWindow, dialog } = require("electron");
 
 let mainWindow = null;
 
@@ -12,6 +13,8 @@ app.on("ready", () => {
 
   mainWindow.loadURL(`file://${__dirname}/index.html`);
 
+  getFileFromUser();
+
   mainWindow.once("ready-to-show", () => {
     mainWindow.show();
   });
@@ -21,9 +24,16 @@ app.on("ready", () => {
   });
 });
 
-// Startup without optimization
-// app.on("ready", () => {
-//   mainWindow = new BrowserWindow();
+const getFileFromUser = async () => {
+  const files = await dialog.showOpenDialog({
+    properties: ["openFile"],
+  });
 
-//   mainWindow.loadURL(`file://${__dirname}/index.html`);
-// });
+  if (!files) return;
+
+  file = files[0];
+
+  const content = fs.readFileSync(file).toString();
+
+  console.log(content);
+};
