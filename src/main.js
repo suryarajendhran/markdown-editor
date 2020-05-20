@@ -8,12 +8,11 @@ app.on("ready", () => {
     show: false,
     webPreferences: {
       nodeIntegration: true,
+      enableRemoteModule: true,
     },
   });
 
   mainWindow.loadURL(`file://${__dirname}/index.html`);
-
-  getFileFromUser();
 
   mainWindow.once("ready-to-show", () => {
     mainWindow.show();
@@ -24,14 +23,26 @@ app.on("ready", () => {
   });
 });
 
-const getFileFromUser = async () => {
-  const files = await dialog.showOpenDialog({
+exports.getFileFromUser = async () => {
+  const fileObject = await dialog.showOpenDialog({
     properties: ["openFile"],
-  });
+    buttonLabel: "Unveil",
+    filters: [
+      {
+        name: "Markdown Files",
+        extensions: ["md", "mdown", "markdown", "marcdown"],
+      },
+      {
+        name: "Text Files",
+        extensions: ["txt", "text"],
+      },
+    ],
+  }); // Returns an object in the form {canceled: bool, filePaths: []}
 
-  if (!files) return;
+  if (fileObject.canceled) return;
 
-  file = files[0];
+  const files = fileObject.filePaths;
+  const file = files[0];
 
   const content = fs.readFileSync(file).toString();
 
