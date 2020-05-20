@@ -43,8 +43,10 @@ exports.getFileFromUser = async () => {
 
   const files = fileObject.filePaths;
   const file = files[0];
+  openFile(file);
+};
 
+const openFile = (file) => {
   const content = fs.readFileSync(file).toString();
-
-  console.log(content);
+  mainWindow.webContents.send("file-opened", file, content);
 };
