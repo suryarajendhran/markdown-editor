@@ -1,4 +1,4 @@
-const fs = require("fs");
+console.time("init");
 const { app, BrowserWindow, dialog } = require("electron");
 
 let mainWindow = null;
@@ -16,6 +16,8 @@ app.on("ready", () => {
 
   mainWindow.once("ready-to-show", () => {
     mainWindow.show();
+    // Done! Ideally we want to get here <100ms after the user clicks the app
+    console.timeEnd("init");
   });
 
   mainWindow.on("closed", () => {
@@ -47,6 +49,7 @@ exports.getFileFromUser = async () => {
 };
 
 const openFile = (file) => {
+  const fs = require("fs");
   const content = fs.readFileSync(file).toString();
   mainWindow.webContents.send("file-opened", file, content);
 };
