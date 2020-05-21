@@ -1,6 +1,8 @@
 # Markdown editor
 
 ![GitHub top language](https://img.shields.io/github/languages/top/suryarajendhran/markdown-editor)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/m/suryarajendhran/markdown-editor)
+![GitHub](https://img.shields.io/github/license/suryarajendhran/markdown-editor)
 
  Markdown editor is a cross-platform desktop application built using [ElectronJS](https://www.electronjs.org/) for working with markdown files. It is currently in development.
 
