@@ -1,5 +1,8 @@
+// TODO: Optimise require for fs.
+
 console.time("init");
 const { app, BrowserWindow, dialog } = require("electron");
+let fs = null;
 
 let mainWindow = null;
 
@@ -18,6 +21,7 @@ app.on("ready", () => {
     mainWindow.show();
     // Done! Ideally we want to get here <100ms after the user clicks the app
     console.timeEnd("init");
+    fs = require("fs");
   });
 
   mainWindow.on("closed", () => {
@@ -48,8 +52,28 @@ exports.getFileFromUser = async () => {
   openFile(file);
 };
 
+exports.saveMarkdown = async (file, content) => {
+  if (!file) {
+    fileObject = await dialog.showSaveDialog({
+      title: "Save Markdown",
+      defaultPath: app.getPath("documents"),
+      filters: [
+        {
+          name: "Markdown files",
+          extensions: ["md", "markdown", "mdown", "marcdown"],
+        },
+      ],
+    });
+
+    if (fileObject.canceled) return;
+
+    file = fileObject.filePath;
+  }
+
+  fs.writeFileSync(file, content);
+};
+
 const openFile = (file) => {
-  const fs = require("fs");
   const content = fs.readFileSync(file).toString();
   app.addRecentDocument(file);
   mainWindow.webContents.send("file-opened", file, content);
